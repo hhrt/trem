@@ -38,3 +38,5 @@ QT += network
 mac {
   CONFIG -= app_bundle
 }
+
+CONFIG += console

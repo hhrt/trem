@@ -1,16 +1,18 @@
 Захуярить исключения:
 
 1) Неверный id торрента
-class WrontTorrentId
+class WrontTorrentIdException
 2) Ошибка доступа к памяти
-class MemoryAccessError
+class MemoryAccessErrorException
 3) Неверный тэг в ответе сервера
-class WrontTag
+class WrontTagException
 4) Ошибка парсинга ответа
-class JsonParsingError
+class JsonParsingErrorException
 5) Ответ не содержит блока торрентов
-class MissingTorrentsBlock
+class MissingTorrentsBlockException
 6) Ошибка получения данных по http
-class DataRecievingError
+class DataRecievingErrorException
 7) Отсутсвует список id для операциий, его требующих
-class MissingIdsList
+class MissingIdsListException
+8) Статус http ответа не 200(ок) и не 409(не правильный id сессии transmission)
+class WrongHttpAnswerException

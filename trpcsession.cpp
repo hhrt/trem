@@ -70,14 +70,10 @@ int TRPCSession::torrentsCount() const {
 };
 
 Torrent TRPCSession::torrent(unsigned int id) {
-  if(id > torrents.count()) {
-    qDebug() << "id > count";
-    throw *(new WrongTorrentIdException);
-  }
-  if(torrents.at(id)==NULL) {
-    qDebug() << "torrent: access error";
-    throw 44;
-  }
+  if(id > torrents.count())
+    throw *(new WrontTorrentIdException);
+  if(torrents.at(id)==NULL)
+    throw *(new MemoryAccessErrorException);
   Torrent torr(*torrents.at(id));
   return torr;
 };
@@ -100,7 +96,7 @@ QString TRPCSession::generateJsonRequest() {
     method = "torrent-start";
     break;
     default:
-    throw 3;//make it !!!
+    throw *(new WrontTagException);
   }
 
   out << "{ \"arguments\" : { ";
@@ -132,7 +128,7 @@ void TRPCSession::parseResponseData() {
   Json::Value root;
   Json::Value torrentsValue;
   if(!reader.parse(response->buffer().data(), root)) 
-    throw 1; //don't forget to make my own exception classes
+    throw *(new JsonParsingErrorException);
 
   pResult = root.get("result", "none").asString().c_str();
   pTag = root.get("tag", "0").asUInt();
@@ -140,7 +136,7 @@ void TRPCSession::parseResponseData() {
   if(pTag == GetTorrentsList) {
     torrentsValue = root["arguments"]["torrents"];
     if(torrentsValue.isNull())
-      throw 22; //and one more time: don't you, fucking, forget!!!
+      throw *(new MissingTorrentsBlockException);
     Torrent *torrent;
     torrents.clear();
     unsigned int i;
@@ -169,7 +165,7 @@ void TRPCSession::doit() {
 
 void TRPCSession::dataReceived(bool error){
   if(error)
-    throw *(new DataRecievingErrorException); //don't forget to make my own exceptions
+    throw *(new DataRecievingErrorException); 
   else {
     switch(http->lastResponse().statusCode()) {
       case 409:
@@ -181,7 +177,7 @@ void TRPCSession::dataReceived(bool error){
       emit success();
       break;
       default:
-      emit err(10);//some error, I must think about this
+      throw *(new WrongHttpAnswerException);
     }
   }
 };
@@ -216,7 +212,7 @@ void TRPCSession::stopTorrents(QList<unsigned int> *ids) {
     pIds = new QList<unsigned int>(*ids);
   }
   if(!pIds)
-    throw 3;
+    throw *(new MissingIdsListException);
   doit();
 };
 
@@ -227,7 +223,7 @@ void TRPCSession::startTorrents(QList<unsigned int> *ids) {
     pIds = new QList<unsigned int>(*ids);
   }
   if(!pIds)
-    throw 3;
+    throw *(new MissingIdsListException);
   doit();
 };
 

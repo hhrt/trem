@@ -55,7 +55,6 @@ class TRPCSession : public QObject {
   void dataReceived(bool error);
 
   signals:
-  void err(int errorCode);
   void success();
 
 };

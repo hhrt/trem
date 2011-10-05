@@ -3,9 +3,8 @@
 #include "torrent.h"
 #include "iostream"
 
-Reciever::Reciever(char *host, char *port, char *url) {
+Reciever::Reciever(const char *host, const char *port, const char *url) {
   session = new TRPCSession();
-  connect(session, SIGNAL(err(int)), this, SLOT(err(int)));
   connect(session, SIGNAL(success()), this, SLOT(success()));
   session->setHost(host);
   session->setPort(port);
@@ -14,11 +13,6 @@ Reciever::Reciever(char *host, char *port, char *url) {
 
 void Reciever::run() {
   session->getTorrentsList();
-};
-
-void Reciever::err(int errorCode) {
-  std::cout << "error # " << errorCode << "\n";
-  emit term();
 };
 
 void Reciever::success() {
