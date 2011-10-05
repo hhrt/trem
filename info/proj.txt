@@ -1,0 +1,75 @@
+TRPCSession
+
+propertys:
+list of Torrent - ro
+list of ids - ids of torrents - wo
+Session ID - transmission session id - xx
+Host - wo
+Port - wo
+URL - wo
+Tag - operation tag - rw
+Result - result of last request - ro
+Fields - fields in request - wo
+
+methods:
+<access methods>
+set ids - public
+set fields - public
+make request /*????*/ - private
+run request - public
+get response - private
+parse response - private
+make torrents list - private
+list(list of ids) - public
+stop(list of ids) - public
+start(list of ids) - public
+
+//----------------------------------\\
+request:
+set method {list, stop, start}
+set ids
+if method == list then set fields
+run request
+
+if response code == 409(wront session id) then
+  get session id
+  set session id to header 
+  run request
+if response code == 200(ok) then
+  parse response
+  if method == list then
+    make torrents list
+    return ok
+  if method == start or stop then
+    method = list
+    run request
+if response == something else
+  throw error
+//-------------------------------------\\
+
+send(m) {
+method = m
+set ids
+set fields
+make request
+run request
+}
+
+init {
+new TRPCSession
+set host
+set port
+set url
+}
+
+stop triggered:
+send(stop)
+start trigered:
+send(start)
+list triggered:
+send(list)
+
+
+if ok then output torrents info
+else output error
+

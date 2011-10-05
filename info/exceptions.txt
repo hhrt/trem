@@ -1,0 +1,16 @@
+Захуярить исключения:
+
+1) Неверный id торрента
+class WrontTorrentId
+2) Ошибка доступа к памяти
+class MemoryAccessError
+3) Неверный тэг в ответе сервера
+class WrontTag
+4) Ошибка парсинга ответа
+class JsonParsingError
+5) Ответ не содержит блока торрентов
+class MissingTorrentsBlock
+6) Ошибка получения данных по http
+class DataRecievingError
+7) Отсутсвует список id для операциий, его требующих
+class MissingIdsList
