@@ -204,7 +204,7 @@ void TRPCSession::setTag(TRPCTag tag) {
 void TRPCSession::getTorrentsList(QList<unsigned int> *ids) {
   pTag = GetTorrentsList;
   if(ids != NULL) {
-    int i;
+//    int i;
     if(pIds) delete pIds;
     pIds = new QList<unsigned int>(*ids);
   }    
@@ -218,8 +218,8 @@ void TRPCSession::stopTorrents(QList<unsigned int> *ids) {
     if(pIds) delete pIds;
     pIds = new QList<unsigned int>(*ids);
   }
-  if(!pIds)
-    throw *(new MissingIdsListException);
+/*  if(!pIds)
+    throw *(new MissingIdsListException);*/
   doit();
 };
 
@@ -229,10 +229,10 @@ void TRPCSession::startTorrents(QList<unsigned int> *ids) {
     if(pIds) delete pIds;
     pIds = new QList<unsigned int>(*ids);
   }
-  if(!pIds)
-    throw *(new MissingIdsListException);
-  int i;
-  /*qDebug() << "pIds:";
+/*  if(!pIds)
+    throw *(new MissingIdsListException);*/
+/*  int i;
+  qDebug() << "pIds:";
   for(i=0;i<pIds->count();i++)
     qDebug() << pIds->at(i);*/
   doit();

@@ -15,6 +15,8 @@ class Reciever : public QObject {
   void run(int actionCode = GetTorrentsList, QList<unsigned int> *ids = NULL);
   private:
   TRPCSession *session;
+  void torrentsList() const;
+  char *operation(int tag);
   private slots:
   void success();
   signals:

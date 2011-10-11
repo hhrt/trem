@@ -22,51 +22,69 @@ void Reciever::run(int actionCode, QList<unsigned int> *ids) {
   switch(actionCode) {
     case GetTorrentsList:
     //qDebug() << "GetTorrentsList";
-      session->getTorrentsList(ids);
+    session->getTorrentsList(ids);
     break;
     case StopTorrents:
     //qDebug() << "StopTorrents";
-      if((ids == NULL) || (ids->count() == 0))
-        throw *(new MissingIdsListException);
-      else
-        session->stopTorrents(ids);
+    session->stopTorrents(ids);
     break;
     case StartTorrents:
     //qDebug() << "StartTorrents";
-      if((ids == NULL) || (ids->count() == 0))
-        throw *(new MissingIdsListException);
-      else
-        session->startTorrents(ids);
+    session->startTorrents(ids);
     break;
     default:
-      throw *(new WrongTagException);
+    throw *(new WrongTagException);
   }
 };
 
 void Reciever::success() {
-  std::cout << "result: \'" << session->result().toAscii().data() << "\'\n";
-//  std::cout << "tag: \'" << session->tag() << "\'\n";
+  std::cout << "Operation \'" << operation(session->tag())
+            << "\', result: \'" << session->result().toAscii().data() << "\'\n";
   switch(session->tag()) {
     case GetTorrentsList:
     std::cout << "torrents count: \'" << session->torrentsCount() << "\'\n";
-    int i;
     std::cout << "Torrents:\n";
-    for(i=0;i<session->torrentsCount();i++) {
-      std::cout << "[id:] \'" << session->torrent(i).id() <<"\' [name:] \'" <<  session->torrent(i).name().toAscii().data()                << "\' [done:] " << session->torrent(i).percentDone() <<"% ";
-      if(session->torrent(i).status() == (1 << 4))
-        std::cout << "paused";
-      else
-        std::cout << "runned";
-      std::cout << "\n";
-    }
+    torrentsList();
     break;
-    case StopTorrents:
+   /* case StopTorrents:
     break;
     case StartTorrents:
-    break;
+    break;*/
     defaults:
     std::cout << "Unknown tag.\n";
   }
   emit term();
+};
+
+void Reciever::torrentsList() const{
+  int i;
+  for(i=0;i<session->torrentsCount();i++){
+    std::cout << "[id:] \'" << session->torrent(i).id() <<"\' [name:] \'" <<  session->torrent(i).name().toAscii().data()
+              << "\' [done:] " << (int)(session->torrent(i).percentDone()*100) <<"% ";
+    if(session->torrent(i).status() == (1 << 4))
+      std::cout << "paused";
+    else
+      std::cout << "runned";
+    std::cout << "\n";
+  }
+};
+
+char *Reciever::operation(int tag) {
+  char *out;
+  switch(tag) {
+    case GetTorrentsList:
+    out = "list";
+    break;
+    case StopTorrents:
+    out = "stop";
+    break;
+    case StartTorrents:
+    out = "start";
+    break;
+    default:
+    out = "unknown";
+    break;
+  };
+  return out;
 };
 

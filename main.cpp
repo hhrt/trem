@@ -30,10 +30,10 @@ int main(int argc, char **argv) {
         if(ok) ids->push_back(id);
       }
     }
-    if(((cmd == StopTorrents)||(cmd == StartTorrents))&&(ids == NULL)) {
+/*    if(((cmd == StopTorrents)||(cmd == StartTorrents))&&(ids == NULL)) {
       std::cerr << "Error! Torrents ids must be specified in format: id1,id2,...,idN\n";
       return -1;
-    }
+    }*/
   }
   if(cmd == 0) {
     std::cerr << "Wrong arguments.\n";

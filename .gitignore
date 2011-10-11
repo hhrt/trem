@@ -3,3 +3,4 @@ moc_*.cpp
 info/ 
 Makefile
 trem
+*.swp
