@@ -30,7 +30,7 @@ void TRPCSession::init() {
   requestBody = new QBuffer();
   tSessionId = "";
   request.clear();
-  http->setHost(host, port.toInt());
+//  http->setHost(host, port.toInt());
 
   pFields.append("id");
   pFields.append("name");
@@ -45,12 +45,10 @@ void TRPCSession::init() {
 
 void TRPCSession::setHost(QString h) {
   host = h;
-  http->setHost(host, port.toInt());
 };
 
 void TRPCSession::setPort(QString p) {
   port = p;
-  http->setHost(host, port.toInt());
 };
 
 void TRPCSession::setUrl(QString u) {
@@ -71,7 +69,7 @@ int TRPCSession::torrentsCount() const {
 
 Torrent TRPCSession::torrent(unsigned int id) {
   if(id > torrents.count())
-    throw *(new WrontTorrentIdException);
+    throw *(new WrongTorrentIdException);
   if(torrents.at(id)==NULL)
     throw *(new MemoryAccessErrorException);
   Torrent torr(*torrents.at(id));
@@ -96,8 +94,10 @@ QString TRPCSession::generateJsonRequest() {
     method = "torrent-start";
     break;
     default:
-    throw *(new WrontTagException);
+    throw *(new WrongTagException);
   }
+
+  //qDebug() << "Method:" << method;
 
   out << "{ \"arguments\" : { ";
   if((pIds) && (pIds->count()>0)) {
@@ -119,7 +119,11 @@ QString TRPCSession::generateJsonRequest() {
   out << "\"tag\" : " << QString::number(pTag);
   out << " } ";
 
-  return output;
+
+//  qDebug() << "JSON:";
+//  qDebug() << *out.string();
+
+  return *out.string();
 
 };
 
@@ -160,7 +164,8 @@ void TRPCSession::doit() {
   requestHeader.setRequest("POST", url);
   requestHeader.setValue(host, port);
   requestHeader.setValue("X-Transmission-Session-Id", tSessionId);
-  http->request(requestHeader, requestBody->data(), response); //make return value check
+  http->setHost(host, port.toInt());
+  http->request(requestHeader, requestBody->data(), response); 
 };
 
 void TRPCSession::dataReceived(bool error){
@@ -170,7 +175,8 @@ void TRPCSession::dataReceived(bool error){
     switch(http->lastResponse().statusCode()) {
       case 409:
       tSessionId = http->lastResponse().value("X-Transmission-Session-Id");
-      getTorrentsList();
+      //qDebug() << "Status:" << http->lastResponse().statusCode();
+      doit();
       break;
       case 200:
       parseResponseData();
@@ -197,7 +203,8 @@ void TRPCSession::setTag(TRPCTag tag) {
 
 void TRPCSession::getTorrentsList(QList<unsigned int> *ids) {
   pTag = GetTorrentsList;
-  if(ids) {
+  if(ids != NULL) {
+    int i;
     if(pIds) delete pIds;
     pIds = new QList<unsigned int>(*ids);
   }    
@@ -224,6 +231,13 @@ void TRPCSession::startTorrents(QList<unsigned int> *ids) {
   }
   if(!pIds)
     throw *(new MissingIdsListException);
+  int i;
+  /*qDebug() << "pIds:";
+  for(i=0;i<pIds->count();i++)
+    qDebug() << pIds->at(i);*/
   doit();
 };
 
+int TRPCSession::tag() const{
+  return pTag;
+};

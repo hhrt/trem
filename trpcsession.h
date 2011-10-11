@@ -22,6 +22,7 @@ class TRPCSession : public QObject {
   void setUrl(QString u);
   void setIds(QList<unsigned int> &ids);
   void setTag(TRPCTag tag);//to make private, or remove
+  int tag() const;
   QStringList fields() const;
   QString result() const;
   int torrentsCount() const;

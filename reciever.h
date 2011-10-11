@@ -2,6 +2,8 @@
 #define RECIEVER_H
 
 #include <QObject>
+#include <QList>
+#include "defines.h"
 
 class TRPCSession;
 
@@ -9,7 +11,8 @@ class Reciever : public QObject {
   Q_OBJECT
   public:
   Reciever(const char *host = "localhost", const char *port = "9091", const char *url = "/transmission/rpc/");
-  void run();
+  ~Reciever();
+  void run(int actionCode = GetTorrentsList, QList<unsigned int> *ids = NULL);
   private:
   TRPCSession *session;
   private slots:

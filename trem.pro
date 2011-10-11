@@ -24,14 +24,16 @@ HEADERS += defines.h \
            include/json/writer.h \
            lib/json_internalarray.inl \
            lib/json_internalmap.inl \
-           lib/json_valueiterator.inl
+           lib/json_valueiterator.inl \
+           app.h
 SOURCES += main.cpp \
            reciever.cpp \
            torrent.cpp \
            trpcsession.cpp \
            lib/json_reader.cpp \
            lib/json_value.cpp \
-           lib/json_writer.cpp
+           lib/json_writer.cpp \
+           app.cpp
 
 QT += network
 

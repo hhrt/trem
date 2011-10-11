@@ -19,9 +19,9 @@ class TRPCSessionException : public QtConcurrent::Exception {
   void setMsg(QString m) { msg = m; }
 };
 
-class WrontTorrentIdException : public TRPCSessionException {
+class WrongTorrentIdException : public TRPCSessionException {
   public:
-  WrontTorrentIdException() : TRPCSessionException() {
+  WrongTorrentIdException() : TRPCSessionException() {
     setMsg("Wrong torrent ID.");
   }
 };
@@ -33,9 +33,9 @@ class MemoryAccessErrorException : public TRPCSessionException {
   }
 };
 
-class WrontTagException : public TRPCSessionException {
+class WrongTagException : public TRPCSessionException {
   public:
-  WrontTagException() : TRPCSessionException() {
+  WrongTagException() : TRPCSessionException() {
     setMsg("Wrong tag.");
   }
 };
